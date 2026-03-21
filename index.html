@@ -1,445 +1,888 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RoadCoin - Creator Payment System</title>
-    <meta name="description" content="Direct payments for creators. No platform fees. Instant settlements. Micro-tips to subscriptions.">
-    <style>
-        :root {
-            --black: #000000;
-            --white: #FFFFFF;
-            --amber: #F5A623;
-            --hot-pink: #FF1D6C;
-            --electric-blue: #2979FF;
-            --violet: #9C27B0;
-            --green: #00E676;
-            --space-xs: 8px;
-            --space-sm: 13px;
-            --space-md: 21px;
-            --space-lg: 34px;
-            --space-xl: 55px;
-            --space-2xl: 89px;
-            --space-3xl: 144px;
-            --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RoadCoin — Utility, Not Speculation</title>
+<meta name="description" content="RoadCoin (ROAD) — utility token for BlackRoad OS. Agent micropayments, creator payouts, Stripe fiat bridge. Honest about crypto. SEC-aware. Built for function, not hype.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --gradient: linear-gradient(135deg, #FF6B2B, #00D4FF);
+    --bg: #000;
+    --surface: #0a0a0a;
+    --border: #1a1a1a;
+    --text: #e0e0e0;
+    --text-muted: #888;
+    --white: #fff;
+    --orange: #FF6B2B;
+    --cyan: #00D4FF;
+    --green: #00E676;
+    --red: #FF5252;
+    --yellow: #FFD600;
+  }
 
-        body {
-            background: var(--black);
-            color: var(--white);
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-            line-height: 1.618;
-            -webkit-font-smoothing: antialiased;
-        }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
 
-        .grid-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image:
-                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 55px 55px;
-            animation: grid-move 20s linear infinite;
-            z-index: 0;
-        }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  a { color: var(--cyan); text-decoration: none; transition: opacity 0.2s; }
+  a:hover { opacity: 0.8; }
 
-        @keyframes grid-move {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(55px, 55px); }
-        }
+  .gradient-text {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(20px);
-            padding: var(--space-md) var(--space-xl);
-            z-index: 1000;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2rem;
+    background: rgba(0,0,0,0.9);
+    border-bottom: 1px solid var(--border);
+  }
+  nav .logo { font-weight: 700; font-size: 1.25rem; }
+  nav .links { display: flex; gap: 2rem; font-size: 0.9rem; }
+  nav .links a { color: var(--text-muted); }
+  nav .links a:hover { color: var(--white); }
 
-        nav .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+  .cta-btn {
+    display: inline-block;
+    padding: 0.6rem 1.5rem;
+    background: var(--gradient);
+    color: #000;
+    font-weight: 600;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: none; cursor: pointer;
+  }
+  .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(255,107,43,0.3); }
+  .cta-btn-outline {
+    display: inline-block;
+    padding: 0.6rem 1.5rem;
+    background: transparent;
+    color: var(--white);
+    font-weight: 600;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .cta-btn-outline:hover { border-color: var(--cyan); }
 
-        .logo {
-            font-size: 32px;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--amber), var(--hot-pink), var(--violet));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 6rem 2rem 4rem;
+    position: relative;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+  }
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    color: var(--white);
+  }
+  .hero p {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    max-width: 640px;
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+  }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
 
-        .btn {
-            padding: var(--space-sm) var(--space-lg);
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s var(--ease);
-            display: inline-block;
-        }
+  /* SECTION */
+  section { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--orange);
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+  .section-desc {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 640px;
+    margin-bottom: 3rem;
+    line-height: 1.7;
+  }
 
-        .btn-primary {
-            background: var(--hot-pink);
-            color: var(--white);
-        }
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(255, 29, 108, 0.4);
-        }
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: border-color 0.3s;
+  }
+  .card:hover { border-color: #333; }
+  .card-icon {
+    width: 48px; height: 48px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.2);
+  }
+  .card h3 { font-size: 1.15rem; font-weight: 600; color: var(--white); margin-bottom: 0.5rem; }
+  .card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 var(--space-xl);
-            position: relative;
-            z-index: 2;
-        }
+  /* HONESTY BOX */
+  .honesty-box {
+    background: var(--surface);
+    border: 1px solid var(--yellow);
+    border-radius: 12px;
+    padding: 2.5rem;
+    margin: 3rem 0;
+  }
+  .honesty-box h3 {
+    color: var(--yellow);
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .honesty-box p {
+    color: var(--text);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+  .honesty-box p:last-child { margin-bottom: 0; }
+  .honesty-box strong { color: var(--white); }
 
-        .hero {
-            padding: calc(var(--space-3xl) * 2) 0 var(--space-3xl);
-            text-align: center;
-        }
+  /* STATS */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 4rem 0;
+  }
+  .stat {
+    text-align: center;
+    padding: 2rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+  }
+  .stat-value {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+  .stat-label { color: var(--text-muted); font-size: 0.9rem; }
 
-        .hero h1 {
-            font-size: 72px;
-            font-weight: 900;
-            margin-bottom: var(--space-md);
-            line-height: 1.1;
-        }
+  /* TOKEN TABLE */
+  .token-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+  }
+  .token-table th, .token-table td {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  .token-table th { color: var(--white); font-weight: 600; }
+  .token-table td { color: var(--text-muted); }
+  .token-table td:first-child { color: var(--text); font-weight: 500; }
 
-        .gradient-text {
-            background: linear-gradient(135deg, var(--amber) 0%, var(--hot-pink) 38.2%, var(--violet) 61.8%, var(--electric-blue) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+  /* DISTRIBUTION BAR */
+  .dist-bar {
+    display: flex;
+    height: 32px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 2rem 0;
+  }
+  .dist-bar div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #000;
+    transition: flex 0.3s;
+  }
 
-        .hero p {
-            font-size: 28px;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: var(--space-xl);
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+  /* CODE BLOCK */
+  .code-block {
+    background: #0d0d0d;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.8;
+    color: var(--text);
+  }
+  .code-block .comment { color: #555; }
+  .code-block .keyword { color: var(--orange); }
+  .code-block .string { color: var(--cyan); }
+  .code-block .func { color: #E040FB; }
+  .code-block .number { color: var(--green); }
 
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: var(--space-lg);
-            margin: var(--space-3xl) 0;
-        }
+  /* FEATURE ROW */
+  .feature-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    margin-bottom: 6rem;
+  }
+  .feature-row:nth-child(even) { direction: rtl; }
+  .feature-row:nth-child(even) > * { direction: ltr; }
+  .feature-content h3 { font-size: 1.8rem; font-weight: 700; color: var(--white); margin-bottom: 1rem; }
+  .feature-content p { color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.7; }
+  .feature-list { list-style: none; }
+  .feature-list li {
+    padding: 0.5rem 0;
+    color: var(--text);
+    font-size: 0.95rem;
+    display: flex; align-items: flex-start; gap: 0.75rem;
+  }
+  .feature-list li::before {
+    content: '';
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--gradient);
+    flex-shrink: 0;
+    margin-top: 0.5rem;
+  }
 
-        .feature-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: var(--space-lg);
-            transition: all 0.3s var(--ease);
-        }
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+  .timeline-item { position: relative; padding-bottom: 2.5rem; }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2rem; top: 0.5rem;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--gradient);
+    margin-left: -4px;
+  }
+  .timeline-item h4 { font-size: 1rem; color: var(--white); margin-bottom: 0.25rem; }
+  .timeline-item .date { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--orange); margin-bottom: 0.5rem; }
+  .timeline-item p { color: var(--text-muted); font-size: 0.9rem; }
 
-        .feature-card:hover {
-            background: rgba(255, 255, 255, 0.06);
-            transform: translateY(-4px);
-            border-color: var(--hot-pink);
-        }
+  /* NOT-LIST */
+  .not-list {
+    list-style: none;
+    margin: 1.5rem 0;
+  }
+  .not-list li {
+    padding: 0.6rem 0;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  .not-list .x {
+    color: var(--red);
+    font-weight: 700;
+    flex-shrink: 0;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .not-list .check-mark {
+    color: var(--green);
+    font-weight: 700;
+    flex-shrink: 0;
+    font-family: 'JetBrains Mono', monospace;
+  }
 
-        .feature-icon {
-            font-size: 48px;
-            margin-bottom: var(--space-md);
-        }
+  /* FAQ */
+  .faq-item {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 1rem;
+    background: var(--surface);
+  }
+  .faq-item h4 { color: var(--white); font-size: 1rem; margin-bottom: 0.5rem; }
+  .faq-item p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; }
 
-        .feature-card h3 {
-            font-size: 24px;
-            margin-bottom: var(--space-sm);
-            color: var(--hot-pink);
-        }
+  /* CTA BANNER */
+  .cta-banner {
+    text-align: center;
+    padding: 6rem 2rem;
+    position: relative;
+  }
+  .cta-banner::before {
+    content: '';
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px; height: 400px;
+    background: radial-gradient(ellipse, rgba(255,107,43,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-banner h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; color: var(--white); margin-bottom: 1rem; }
+  .cta-banner p { color: var(--text-muted); font-size: 1.1rem; max-width: 500px; margin: 0 auto 2rem; }
 
-        .feature-card p {
-            color: rgba(255, 255, 255, 0.7);
-        }
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 3rem 2rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+  footer a { color: var(--text-muted); }
+  footer .footer-links { display: flex; gap: 2rem; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
 
-        .comparison {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 24px;
-            padding: var(--space-xl);
-            margin: var(--space-3xl) 0;
-        }
+  /* SEC NOTICE */
+  .sec-notice {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+  .sec-notice h4 {
+    color: var(--white);
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
 
-        .comparison h2 {
-            text-align: center;
-            font-size: 48px;
-            margin-bottom: var(--space-xl);
-        }
-
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: var(--space-xl);
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .comparison-col h3 {
-            font-size: 24px;
-            margin-bottom: var(--space-md);
-        }
-
-        .comparison-col ul {
-            list-style: none;
-        }
-
-        .comparison-col li {
-            padding: var(--space-sm) 0;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 18px;
-        }
-
-        .bad li::before {
-            content: '❌';
-            margin-right: var(--space-sm);
-        }
-
-        .good li::before {
-            content: '✅';
-            margin-right: var(--space-sm);
-        }
-
-        .pricing {
-            text-align: center;
-            margin: var(--space-3xl) 0;
-        }
-
-        .pricing h2 {
-            font-size: 56px;
-            margin-bottom: var(--space-xl);
-        }
-
-        .pricing-highlight {
-            background: rgba(255, 255, 255, 0.03);
-            border: 2px solid var(--hot-pink);
-            border-radius: 16px;
-            padding: var(--space-xl);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .price {
-            font-size: 72px;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--hot-pink), var(--violet));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: var(--space-lg) 0;
-        }
-
-        .pricing-highlight ul {
-            list-style: none;
-            text-align: left;
-            margin: var(--space-lg) 0;
-        }
-
-        .pricing-highlight li {
-            padding: var(--space-xs) 0;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .pricing-highlight li::before {
-            content: '✓';
-            color: var(--green);
-            margin-right: var(--space-sm);
-            font-weight: bold;
-        }
-
-        footer {
-            text-align: center;
-            padding: var(--space-xl) 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 42px; }
-            .comparison-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+  @media (max-width: 768px) {
+    nav .links { display: none; }
+    .feature-row, .feature-row:nth-child(even) { grid-template-columns: 1fr; direction: ltr; }
+    section { padding: 4rem 1.5rem; }
+  }
+</style>
 </head>
 <body>
-    <div class="grid-bg"></div>
 
-    <nav>
-        <div class="container">
-            <div class="logo">💰 RoadCoin</div>
-            <a href="#pricing" class="btn btn-primary">Get Started</a>
-        </div>
-    </nav>
+<!-- NAV -->
+<nav>
+  <div class="logo"><span class="gradient-text">RoadCoin</span></div>
+  <div class="links">
+    <a href="#utility">Utility</a>
+    <a href="#tokenomics">Tokenomics</a>
+    <a href="#honesty">Honesty</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#docs">Docs</a>
+  </div>
+  <a href="#docs" class="cta-btn">Read the Whitepaper</a>
+</nav>
 
-    <section class="hero">
-        <div class="container">
-            <h1>Creator Payments<br><span class="gradient-text">Without the Platform Tax</span></h1>
-            <p>Direct payments, micro-tips, subscriptions. No 30% fees. Instant settlements. You keep what you earn.</p>
-            <div style="display: flex; gap: var(--space-md); justify-content: center; margin-top: var(--space-xl);">
-                <a href="#pricing" class="btn btn-primary" style="font-size: 20px; padding: var(--space-md) var(--space-2xl);">Start Earning →</a>
-            </div>
-        </div>
-    </section>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge mono">BlackRoad OS / Ecosystem Token</div>
+  <h1>Utility,<br>Not <span class="gradient-text">Speculation.</span></h1>
+  <p>RoadCoin is the payment token for the BlackRoad OS ecosystem. Agent micropayments. Creator payouts. Stripe bridge for fiat. Built because fiat rails can't handle sub-cent AI transactions, not because we wanted to print money.</p>
+  <div class="hero-actions">
+    <a href="#utility" class="cta-btn">See the Utility</a>
+    <a href="#honesty" class="cta-btn-outline">Read Our Honest Take on Crypto</a>
+  </div>
+</div>
 
-    <section class="container">
-        <h2 style="text-align: center; font-size: 48px; margin-bottom: var(--space-xl);">Built for Creators, Not Platforms</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">💸</div>
-                <h3>Zero Platform Fees</h3>
-                <p>2.9% + $0.30 credit card processing. No additional platform cut. You keep 97%+.</p>
-            </div>
+<!-- HONESTY BOX -->
+<section>
+  <div class="honesty-box" id="honesty">
+    <h3>Let's be honest about crypto.</h3>
+    <p><strong>80% of ICOs were scams.</strong> Most tokens have zero utility. Retail investors lost billions chasing promises from teams that never shipped a product. We know this. You know this. Pretending otherwise would be insulting.</p>
+    <p>RoadCoin exists for one reason: <strong>AI agents need to pay each other in sub-cent increments at millisecond speed.</strong> You cannot do that with Stripe (minimum ~$0.50, days to settle). You cannot do that with bank transfers. You need a programmable payment layer. That's what ROAD is.</p>
+    <p>Everything else -- creator payouts, ecosystem governance, merchant acceptance -- is built on top of that core utility. <strong>If you're looking for a moonshot gamble, this isn't it.</strong> If you're building on BlackRoad OS and need your agents to transact, ROAD is the cleanest way to do it.</p>
+    <p>The Stripe bridge means you can <strong>always convert ROAD to real dollars.</strong> No lock-ups. No withdrawal games. Cash out when you want.</p>
+  </div>
+</section>
 
-            <div class="feature-card">
-                <div class="feature-icon">⚡</div>
-                <h3>Instant Settlements</h3>
-                <p>Money in your account instantly. No waiting 30-60 days for payouts.</p>
-            </div>
+<!-- WHAT ROAD IS / IS NOT -->
+<section>
+  <div class="section-label">Clarity</div>
+  <div class="section-title">What ROAD is. What it isn't.</div>
 
-            <div class="feature-card">
-                <div class="feature-icon">🎯</div>
-                <h3>Micro-Tips</h3>
-                <p>Accept tips as small as $1. Perfect for social media, streams, and content.</p>
-            </div>
+  <div class="grid-2">
+    <div class="card">
+      <h3 style="color: var(--green);">ROAD Is</h3>
+      <ul class="not-list">
+        <li><span class="check-mark">+</span> <span>A utility token for agent-to-agent micropayments</span></li>
+        <li><span class="check-mark">+</span> <span>A payment rail for creator revenue sharing</span></li>
+        <li><span class="check-mark">+</span> <span>Convertible to USD via Stripe at any time</span></li>
+        <li><span class="check-mark">+</span> <span>Fixed supply (1B tokens, no minting)</span></li>
+        <li><span class="check-mark">+</span> <span>Governed by token holders, not the company</span></li>
+        <li><span class="check-mark">+</span> <span>Useful from day one (agent payments live)</span></li>
+        <li><span class="check-mark">+</span> <span>Audited by two independent security firms</span></li>
+        <li><span class="check-mark">+</span> <span>SEC-aware with legal counsel engaged</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="color: var(--red);">ROAD Is Not</h3>
+      <ul class="not-list">
+        <li><span class="x">X</span> <span>A security or investment contract</span></li>
+        <li><span class="x">X</span> <span>A promise of future profit or returns</span></li>
+        <li><span class="x">X</span> <span>Inflationary (no minting, no yield farming)</span></li>
+        <li><span class="x">X</span> <span>Required to use BlackRoad OS (fiat works fine)</span></li>
+        <li><span class="x">X</span> <span>A speculative trading instrument</span></li>
+        <li><span class="x">X</span> <span>Locked or restricted for withdrawal</span></li>
+        <li><span class="x">X</span> <span>Controlled by one person or entity</span></li>
+        <li><span class="x">X</span> <span>Launched without legal review</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
 
-            <div class="feature-card">
-                <div class="feature-icon">📅</div>
-                <h3>Subscription Management</h3>
-                <p>Monthly, yearly, lifetime. Tiered access. Automatic renewals and cancellations.</p>
-            </div>
+<!-- UTILITY -->
+<section id="utility">
+  <div class="section-label">Utility</div>
+  <div class="section-title">Three real use cases. No fluff.</div>
+  <div class="section-desc">Every token use case maps to a real technical requirement that fiat can't solve at the speed and granularity we need.</div>
 
-            <div class="feature-card">
-                <div class="feature-icon">🔗</div>
-                <h3>One Link</h3>
-                <p>roadcoin.to/yourname - Accept all payment types with a single link.</p>
-            </div>
+  <div class="feature-row">
+    <div class="feature-content">
+      <div class="section-label">Use Case 1</div>
+      <h3>Agent Micropayments</h3>
+      <p>When Agent A requests compute from Agent B, it costs fractions of a cent. Stripe's minimum transaction is ~$0.50. Bank wires take days. ROAD settles in milliseconds at any amount.</p>
+      <ul class="feature-list">
+        <li>Sub-cent transactions (0.0001 ROAD minimum)</li>
+        <li>Payment channels for high-frequency agent commerce</li>
+        <li>Gas-abstracted: agents don't need to hold ETH</li>
+        <li>Settlement batching: aggregate micro-txns hourly</li>
+        <li>Usage metering: compute, storage, bandwidth priced per-unit</li>
+        <li>Rate oracle for real-time ROAD/USD conversion</li>
+      </ul>
+    </div>
+    <div class="code-block" style="align-self: center;">
+      <span class="comment">// Agent micropayment (happens 1000x/second)</span><br>
+      <span class="keyword">const</span> payment = <span class="keyword">await</span> roadcoin.<span class="func">transfer</span>({<br>
+      &nbsp;&nbsp;from: <span class="string">'agent:researcher-7'</span>,<br>
+      &nbsp;&nbsp;to: <span class="string">'agent:compute-pool-3'</span>,<br>
+      &nbsp;&nbsp;amount: <span class="number">0.0042</span>, <span class="comment">// ROAD</span><br>
+      &nbsp;&nbsp;memo: <span class="string">'inference:llama3-70b:128tok'</span>,<br>
+      &nbsp;&nbsp;channel: <span class="string">'fast'</span> <span class="comment">// payment channel, not on-chain</span><br>
+      });<br><br>
+      <span class="comment">// Settled instantly. On-chain settlement hourly.</span><br>
+      <span class="comment">// Cost in USD: ~$0.004 — impossible via Stripe</span>
+    </div>
+  </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3>Dashboard & Analytics</h3>
-                <p>Real-time earnings, payer insights, and financial reports.</p>
-            </div>
-        </div>
-    </section>
+  <div class="feature-row">
+    <div class="feature-content">
+      <div class="section-label">Use Case 2</div>
+      <h3>Creator Payouts</h3>
+      <p>Creators build tools, templates, and content on BlackRoad OS. Revenue is split automatically via smart contract. No invoicing, no net-30, no minimum payout threshold games. Earn ROAD, convert to USD whenever you want.</p>
+      <ul class="feature-list">
+        <li>Configurable revenue splits (smart contract enforced)</li>
+        <li>Real-time earnings tracking dashboard</li>
+        <li>No minimum payout threshold</li>
+        <li>Instant Stripe cash-out to bank account</li>
+        <li>Automatic tax document generation (US 1099)</li>
+        <li>Multi-creator collaboration splits</li>
+      </ul>
+    </div>
+    <div class="code-block" style="align-self: center;">
+      <span class="comment">// Creator revenue share (auto-executed)</span><br>
+      <span class="keyword">const</span> split = <span class="keyword">await</span> roadcoin.<span class="func">splits</span>.<span class="func">create</span>({<br>
+      &nbsp;&nbsp;product: <span class="string">'template:dashboard-pro'</span>,<br>
+      &nbsp;&nbsp;recipients: [<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;{ address: <span class="string">'creator:alice'</span>, share: <span class="number">70</span> },<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;{ address: <span class="string">'creator:bob'</span>, share: <span class="number">20</span> },<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;{ address: <span class="string">'treasury'</span>, share: <span class="number">10</span> }<br>
+      &nbsp;&nbsp;]<br>
+      });<br><br>
+      <span class="comment">// Every sale auto-distributes to all recipients</span><br>
+      <span class="comment">// Alice: 70 ROAD -> cash out -> $70 to bank</span>
+    </div>
+  </div>
 
-    <section class="container">
-        <div class="comparison">
-            <h2>Stop Losing Money to Platforms</h2>
-            <div class="comparison-grid">
-                <div class="comparison-col bad">
-                    <h3 style="color: #FF1744;">Traditional Platforms</h3>
-                    <ul>
-                        <li>Patreon: 5-12% platform fee + processing</li>
-                        <li>Ko-fi: 5% platform fee + processing</li>
-                        <li>Apple: 30% platform fee (!)</li>
-                        <li>YouTube: 30% platform cut</li>
-                        <li>Spotify: 70% to platform/labels</li>
-                        <li>30-60 day payout delays</li>
-                        <li>Platform owns relationship</li>
-                    </ul>
-                </div>
+  <div class="feature-row">
+    <div class="feature-content">
+      <div class="section-label">Use Case 3</div>
+      <h3>Stripe Fiat Bridge</h3>
+      <p>The bridge between crypto and real money. Buy ROAD with a credit card. Sell ROAD to your bank account. No exchange account needed. No KYC delays for small amounts. Stripe handles the compliance.</p>
+      <ul class="feature-list">
+        <li>Buy ROAD with any Stripe-supported payment method</li>
+        <li>Sell ROAD to bank via Stripe Connect</li>
+        <li>Real-time ROAD/USD rate from oracle</li>
+        <li>Instant conversion, no order book</li>
+        <li>Transaction limits with progressive KYC</li>
+        <li>Full compliance reporting</li>
+      </ul>
+    </div>
+    <div class="code-block" style="align-self: center;">
+      <span class="comment">// Buy ROAD with a credit card</span><br>
+      <span class="keyword">const</span> purchase = <span class="keyword">await</span> roadcoin.<span class="func">bridge</span>.<span class="func">buy</span>({<br>
+      &nbsp;&nbsp;amount_usd: <span class="number">100_00</span>, <span class="comment">// $100.00</span><br>
+      &nbsp;&nbsp;payment_method: <span class="string">'pm_card_visa'</span>,<br>
+      &nbsp;&nbsp;destination: <span class="string">'wallet:0xabc...'</span><br>
+      });<br><br>
+      <span class="comment">// Sell ROAD to bank account</span><br>
+      <span class="keyword">const</span> cashout = <span class="keyword">await</span> roadcoin.<span class="func">bridge</span>.<span class="func">sell</span>({<br>
+      &nbsp;&nbsp;amount_road: <span class="number">500</span>,<br>
+      &nbsp;&nbsp;destination: <span class="string">'bank:acct_stripe_connect'</span><br>
+      });<br><br>
+      <span class="comment">// cashout.usd_amount === 485.50 (after fees)</span>
+    </div>
+  </div>
+</section>
 
-                <div class="comparison-col good">
-                    <h3 style="color: var(--green);">RoadCoin</h3>
-                    <ul>
-                        <li>0% platform fee</li>
-                        <li>2.9% + $0.30 (Stripe only)</li>
-                        <li>Instant payouts</li>
-                        <li>You own your supporters</li>
-                        <li>Export all data anytime</li>
-                        <li>No minimum payout</li>
-                        <li>Works everywhere</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- TOKENOMICS -->
+<section id="tokenomics">
+  <div class="section-label">Tokenomics</div>
+  <div class="section-title">Transparent. Fixed. Simple.</div>
+  <div class="section-desc">1 billion tokens. No minting function. No inflation. No surprises. Every allocation has a purpose and a vesting schedule.</div>
 
-    <section class="container">
-        <div style="background: rgba(255, 255, 255, 0.02); border-radius: 24px; padding: var(--space-xl); margin: var(--space-3xl) 0; text-align: center;">
-            <h2 style="font-size: 36px; margin-bottom: var(--space-lg);">The Math: You Keep More</h2>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); max-width: 1000px; margin: 0 auto;">
-                <div>
-                    <div style="font-size: 48px; font-weight: 800; color: var(--hot-pink); margin-bottom: var(--space-sm);">$10</div>
-                    <div style="color: rgba(255,255,255,0.6); margin-bottom: var(--space-md);">Supporter pays</div>
-                    <div style="font-size: 24px; font-weight: 700; color: #FF1744;">$6.50</div>
-                    <div style="color: rgba(255,255,255,0.5);">Patreon (12% + fees)</div>
-                </div>
-                <div>
-                    <div style="font-size: 48px; font-weight: 800; color: var(--hot-pink); margin-bottom: var(--space-sm);">$10</div>
-                    <div style="color: rgba(255,255,255,0.6); margin-bottom: var(--space-md);">Supporter pays</div>
-                    <div style="font-size: 24px; font-weight: 700; color: #FF1744;">$6.71</div>
-                    <div style="color: rgba(255,255,255,0.5);">Ko-fi (5% + fees)</div>
-                </div>
-                <div>
-                    <div style="font-size: 48px; font-weight: 800; color: var(--hot-pink); margin-bottom: var(--space-sm);">$10</div>
-                    <div style="color: rgba(255,255,255,0.6); margin-bottom: var(--space-md);">Supporter pays</div>
-                    <div style="font-size: 24px; font-weight: 700; color: var(--green);">$9.41</div>
-                    <div style="color: rgba(255,255,255,0.5);">RoadCoin (fees only)</div>
-                </div>
-            </div>
-            <p style="margin-top: var(--space-xl); font-size: 18px; color: rgba(255,255,255,0.6);">On $1,000/month: Patreon = $650 | Ko-fi = $671 | RoadCoin = $941</p>
-        </div>
-    </section>
+  <div class="stats-row">
+    <div class="stat">
+      <div class="stat-value gradient-text">1B</div>
+      <div class="stat-label">Total Supply (Fixed)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value gradient-text">ROAD</div>
+      <div class="stat-label">Ticker Symbol</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value gradient-text">ERC-20</div>
+      <div class="stat-label">Token Standard</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value gradient-text">0</div>
+      <div class="stat-label">Inflation Rate</div>
+    </div>
+  </div>
 
-    <section id="pricing" class="container">
-        <div class="pricing">
-            <h2>Simple, Honest Pricing</h2>
-            <div class="pricing-highlight">
-                <h3 style="font-size: 36px; margin-bottom: var(--space-md);">For Creators</h3>
-                <div class="price">FREE</div>
-                <p style="font-size: 20px; color: rgba(255,255,255,0.7); margin-bottom: var(--space-lg);">0% platform fee. Forever.</p>
-                <ul>
-                    <li>Unlimited payments</li>
-                    <li>Instant settlements</li>
-                    <li>Subscription management</li>
-                    <li>Analytics dashboard</li>
-                    <li>Custom branding</li>
-                    <li>Export all data</li>
-                    <li>Email support</li>
-                </ul>
-                <div style="margin-top: var(--space-xl); padding-top: var(--space-lg); border-top: 1px solid rgba(255,255,255,0.1);">
-                    <p style="font-size: 14px; color: rgba(255,255,255,0.6);">Only payment processing fees (Stripe: 2.9% + $0.30)</p>
-                </div>
-                <a href="#" class="btn btn-primary" style="width: 100%; margin-top: var(--space-xl); font-size: 20px; padding: var(--space-md);">Get Started →</a>
-            </div>
-        </div>
-    </section>
+  <!-- Distribution bar -->
+  <div class="dist-bar">
+    <div style="flex: 30; background: var(--orange);">30%</div>
+    <div style="flex: 25; background: var(--cyan);">25%</div>
+    <div style="flex: 20; background: var(--green);">20%</div>
+    <div style="flex: 15; background: #E040FB;">15%</div>
+    <div style="flex: 10; background: var(--yellow);">10%</div>
+  </div>
 
-    <section class="container">
-        <div style="background: rgba(255, 255, 255, 0.02); border-radius: 24px; padding: var(--space-3xl); text-align: center; margin: var(--space-3xl) 0;">
-            <h2 style="font-size: 56px; margin-bottom: var(--space-md);">Start Earning More Today</h2>
-            <p style="font-size: 24px; color: rgba(255, 255, 255, 0.7); margin-bottom: var(--space-xl);">Join thousands of creators keeping more of what they earn</p>
-            <a href="#pricing" class="btn btn-primary" style="font-size: 20px; padding: var(--space-lg) var(--space-2xl);">Create Your RoadCoin Link →</a>
-            <p style="font-size: 14px; color: rgba(255, 255, 255, 0.5); margin-top: var(--space-md);">Setup in 2 minutes • No monthly fees • Cancel anytime</p>
-        </div>
-    </section>
+  <table class="token-table">
+    <thead>
+      <tr>
+        <th>Allocation</th>
+        <th>Percentage</th>
+        <th>Amount</th>
+        <th>Vesting</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color: var(--orange);">Treasury</td>
+        <td>30%</td>
+        <td>300,000,000</td>
+        <td>4-year linear vest</td>
+        <td>Long-term ecosystem funding, governed by token holders</td>
+      </tr>
+      <tr>
+        <td style="color: var(--cyan);">Ecosystem Grants</td>
+        <td>25%</td>
+        <td>250,000,000</td>
+        <td>Distributed via governance proposals</td>
+        <td>Developer grants, creator incentives, integration bounties</td>
+      </tr>
+      <tr>
+        <td style="color: var(--green);">Agent Rewards</td>
+        <td>20%</td>
+        <td>200,000,000</td>
+        <td>Earned through platform usage</td>
+        <td>Rewards for agents providing compute, storage, bandwidth</td>
+      </tr>
+      <tr>
+        <td style="color: #E040FB;">Team</td>
+        <td>15%</td>
+        <td>150,000,000</td>
+        <td>1-year cliff, 4-year vest</td>
+        <td>Founding team alignment (standard startup vesting)</td>
+      </tr>
+      <tr>
+        <td style="color: var(--yellow);">Initial Liquidity</td>
+        <td>10%</td>
+        <td>100,000,000</td>
+        <td>Unlocked at launch</td>
+        <td>Stripe bridge liquidity pool + initial DEX listing</td>
+      </tr>
+    </tbody>
+  </table>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 BlackRoad Gov, Inc. All rights reserved.</p>
-            <p style="margin-top: var(--space-sm);">Payments for creators, by creators.</p>
-        </div>
-    </footer>
+  <div class="grid-2" style="margin-top: 2rem;">
+    <div class="card">
+      <h3>No Minting</h3>
+      <p>The smart contract has no mint function. 1 billion tokens created at deployment. That's it. No board vote, no governance proposal, no emergency action can create new tokens. The supply is mathematically fixed.</p>
+    </div>
+    <div class="card">
+      <h3>No Yield Farming</h3>
+      <p>We will never create artificial incentives to "stake" or "farm" ROAD. Staking exists only for governance weight -- you lock tokens to vote on proposals. There is no APY. No rewards for doing nothing. Earn ROAD by providing real value.</p>
+    </div>
+  </div>
+</section>
 
-    <script>
-        console.log('RoadCoin - Creator payments without the platform tax');
-        console.log('0% platform fees. You keep what you earn.');
-    </script>
+<!-- HOW IT WORKS -->
+<section>
+  <div class="section-label">Architecture</div>
+  <div class="section-title">How it actually works.</div>
+  <div class="section-desc">No hand-waving. Here's the technical architecture.</div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-icon" style="background: rgba(255,107,43,0.1); border-color: rgba(255,107,43,0.2);">L1</div>
+      <h3>Settlement Layer</h3>
+      <p>ERC-20 on Ethereum mainnet. Final settlement of all transactions. Hourly batch settlement from payment channels. Multi-sig treasury. Governance contract for proposals and voting.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background: rgba(0,212,255,0.1); border-color: rgba(0,212,255,0.2);">L2</div>
+      <h3>Payment Channels</h3>
+      <p>Off-chain payment channels for high-frequency agent transactions. Millisecond settlement. Sub-cent fees. State channels commit to L1 hourly. Dispute resolution built in.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background: rgba(0,230,118,0.1); border-color: rgba(0,230,118,0.2);">$$</div>
+      <h3>Stripe Bridge</h3>
+      <p>Fiat on/off ramp via Stripe. Buy ROAD with credit card. Sell ROAD to bank account. Real-time rate oracle. KYC handled by Stripe. No exchange account needed.</p>
+    </div>
+  </div>
+
+  <div class="code-block" style="margin-top: 2rem;">
+    <span class="comment">// Architecture flow</span><br>
+    <span class="comment">//</span><br>
+    <span class="comment">// Agent A needs compute from Agent B:</span><br>
+    <span class="comment">// 1. Agent A opens payment channel with Agent B (one-time, L1)</span><br>
+    <span class="comment">// 2. Agent A sends 0.004 ROAD per inference request (off-chain, instant)</span><br>
+    <span class="comment">// 3. After 1000 requests: 4 ROAD accumulated in channel</span><br>
+    <span class="comment">// 4. Hourly settlement: channel state committed to L1</span><br>
+    <span class="comment">// 5. Agent B cashes out: 4 ROAD -> bridge.sell() -> $4.00 to bank</span><br>
+    <span class="comment">//</span><br>
+    <span class="comment">// Total on-chain transactions: 2 (open channel + settle)</span><br>
+    <span class="comment">// Total off-chain transactions: 1000</span><br>
+    <span class="comment">// Gas cost: ~$0.50 total (not per transaction)</span>
+  </div>
+</section>
+
+<!-- GOVERNANCE -->
+<section>
+  <div class="section-label">Governance</div>
+  <div class="section-title">Your tokens, your vote.</div>
+  <div class="section-desc">ROAD holders govern the treasury and protocol upgrades. One token, one vote. Delegation supported. BlackRoad OS Inc. has no veto power.</div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Proposal Process</h3>
+      <p>Any holder with 100,000+ ROAD (or delegated votes) can submit a proposal. 7-day voting period. 10% quorum required. Simple majority passes. Timelock delay before execution for security review.</p>
+    </div>
+    <div class="card">
+      <h3>What Can Be Governed</h3>
+      <p>Treasury spending (grants, bounties, partnerships). Protocol fee adjustments. Bridge parameters. Ecosystem fund distribution. The governance contract itself (upgradeable via vote).</p>
+    </div>
+    <div class="card">
+      <h3>Delegation</h3>
+      <p>Don't want to vote on every proposal? Delegate your voting power to someone you trust. Revoke anytime. Delegation is free (off-chain signature). Your tokens stay in your wallet.</p>
+    </div>
+    <div class="card">
+      <h3>Transparency</h3>
+      <p>Every proposal, vote, and treasury transaction is on-chain and publicly auditable. No back-room deals. No secret allocations. The block explorer shows everything.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="section-label">Roadmap</div>
+  <div class="section-title">What we're building and when.</div>
+  <div class="section-desc">Concrete milestones with real deliverables. No "exciting partnerships coming soon" vaporware.</div>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="date">Q1 2026</div>
+      <h4>Token Foundation</h4>
+      <p>ERC-20 contract development. Token economics finalization. Legal review with securities counsel. Testnet deployment on Sepolia. Internal agent micropayment prototype. Whitepaper publication.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="date">Q2 2026</div>
+      <h4>Agent Micropayments Live</h4>
+      <p>Payment channel protocol v1. Gas abstraction for agents. Usage metering integration. Settlement batching. Rate oracle deployment. First independent smart contract audit.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="date">Q3 2026</div>
+      <h4>Stripe Bridge + Creator Payouts</h4>
+      <p>Fiat on/off ramp via Stripe. Creator registration flow. Revenue share smart contracts. RoadPay integration. Web wallet launch. Second independent security audit.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="date">Q4 2026</div>
+      <h4>Mainnet + Governance</h4>
+      <p>Ethereum mainnet deployment. Multi-sig treasury activation. Governance contract live. Voting UI. Block explorer. Mobile wallet. Hardware wallet support.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="date">2027</div>
+      <h4>Ecosystem Growth</h4>
+      <p>Cross-chain bridges (Polygon, Arbitrum, Base). DEX liquidity. Advanced governance. Creator marketplace. Enterprise treasury tools. Full regulatory compliance.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECURITY -->
+<section>
+  <div class="section-label">Security</div>
+  <div class="section-title">Audited. Transparent. Cautious.</div>
+  <div class="section-desc">Smart contract security is not optional. We audit twice, deploy once, and keep admin functions time-locked.</div>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Dual Audit</h3>
+      <p>Two independent security firms audit every contract before mainnet. We publish full audit reports. No "audited by our friends" theater. Real firms, real findings, real fixes.</p>
+    </div>
+    <div class="card">
+      <h3>Time-Locked Admin</h3>
+      <p>All admin functions have a 48-hour timelock. The community can review any admin action before it executes. Emergency pause requires multi-sig (3 of 5 signers).</p>
+    </div>
+    <div class="card">
+      <h3>No Proxy Upgrades</h3>
+      <p>The token contract is not upgradeable. What you audit is what runs forever. New features deploy as separate contracts that interact with the token, never modify it.</p>
+    </div>
+    <div class="card">
+      <h3>Multi-Sig Treasury</h3>
+      <p>Treasury funds held in a 3-of-5 multi-sig. Signers include team members and independent community representatives. No single person can move treasury funds.</p>
+    </div>
+    <div class="card">
+      <h3>Bug Bounty</h3>
+      <p>Up to $100,000 for critical vulnerabilities. Responsible disclosure program. We pay bounties in USD (not tokens) because that's what matters.</p>
+    </div>
+    <div class="card">
+      <h3>Open Source Contracts</h3>
+      <p>All smart contract code is publicly verified on Etherscan. Read it, fork it, audit it yourself. Security through transparency, not obscurity.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SEC NOTICE -->
+<section>
+  <div class="sec-notice">
+    <h4>Regulatory Awareness</h4>
+    <p>BlackRoad OS, Inc. has reviewed SEC guidance on digital assets, including the Howey test framework and recent enforcement actions. RoadCoin is designed as a utility token with real, immediate use (agent micropayments) available from day one. We do not market ROAD as an investment or promise any return on purchase.</p>
+    <p>We will engage qualified securities counsel before any public token distribution. ROAD will not be listed on any exchange until legal review is complete and we are confident in our compliance position. We believe in building legally, not asking forgiveness later.</p>
+    <p>If regulatory guidance changes, we will adapt. The Stripe bridge ensures ROAD holders can always convert to USD regardless of exchange listing status.</p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="docs">
+  <div class="section-label">FAQ</div>
+  <div class="section-title">Straight answers.</div>
+
+  <div class="faq-item">
+    <h4>Why not just use ETH or USDC for agent payments?</h4>
+    <p>Gas costs. Every ETH/USDC transfer costs gas. When agents transact thousands of times per second at sub-cent amounts, gas fees would exceed the payment value. ROAD uses off-chain payment channels with periodic on-chain settlement, reducing gas costs by 99%+.</p>
+  </div>
+  <div class="faq-item">
+    <h4>Is ROAD required to use BlackRoad OS?</h4>
+    <p>No. You can use BlackRoad OS entirely with fiat payments via RoadPay. ROAD is optional and exists specifically for agent micropayments and creator payouts where fiat rails are too slow or expensive. If Stripe works for your use case, use Stripe.</p>
+  </div>
+  <div class="faq-item">
+    <h4>Can I cash out ROAD to real dollars?</h4>
+    <p>Yes. The Stripe bridge converts ROAD to USD and deposits to your bank account. No exchange account needed. No withdrawal delays. Standard Stripe Connect payout timing (1-2 business days).</p>
+  </div>
+  <div class="faq-item">
+    <h4>Will ROAD be listed on exchanges?</h4>
+    <p>Not until legal review is complete and we're confident in compliance. Our priority is utility (agent payments, creator payouts), not trading. The Stripe bridge provides liquidity without exchange dependency.</p>
+  </div>
+  <div class="faq-item">
+    <h4>What if the SEC classifies ROAD as a security?</h4>
+    <p>We've designed ROAD to meet utility token criteria (usable from day one, no promise of profit, decentralized governance). If regulation changes, we'll adapt. The Stripe bridge ensures ROAD holders can always convert to USD. We're building legally, with counsel.</p>
+  </div>
+  <div class="faq-item">
+    <h4>Why should I trust you when 80% of crypto projects failed?</h4>
+    <p>Because we're not a crypto project that happens to have software. We're a software company (BlackRoad OS) that needs a programmable payment layer for AI agents. The token serves the software, not the other way around. If ROAD disappeared tomorrow, BlackRoad OS would still work -- just with Stripe only. The token makes agent micropayments possible, not the company viable.</p>
+  </div>
+  <div class="faq-item">
+    <h4>How do agent micropayments actually work?</h4>
+    <p>Two agents open a payment channel (one on-chain transaction). Then they transact off-chain at any speed and any amount. Periodically (hourly by default), the channel state is committed on-chain. This means 1000 micropayments cost the same gas as 1 transaction. The math works.</p>
+  </div>
+  <div class="faq-item">
+    <h4>What's stopping the team from dumping their tokens?</h4>
+    <p>1-year cliff and 4-year vesting, enforced by smart contract (not a promise). Team tokens are locked on-chain. After the cliff, tokens vest linearly. You can verify this on Etherscan. Also: 15% team allocation is standard (below industry average of 20-25%).</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-banner">
+  <h2>Built for utility.<br><span class="gradient-text">Not hype.</span></h2>
+  <p>Read the whitepaper. Review the contracts. Ask hard questions. We welcome skepticism.</p>
+  <div class="hero-actions" style="justify-content: center;">
+    <a href="#" class="cta-btn">Read the Whitepaper</a>
+    <a href="#" class="cta-btn-outline">View Smart Contracts</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-links">
+    <a href="https://blackroad.io">BlackRoad OS</a>
+    <a href="#">Whitepaper</a>
+    <a href="#">Smart Contracts</a>
+    <a href="#">Block Explorer</a>
+    <a href="#">Security Audits</a>
+    <a href="#">Governance</a>
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms</a>
+  </div>
+  <p>BlackRoad OS, Inc. All rights reserved. RoadCoin is a utility token of the BlackRoad OS ecosystem.</p>
+  <p style="margin-top: 0.5rem;">RoadCoin (ROAD) is not a security, investment contract, or promise of financial return.</p>
+  <p style="margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">Remember the Road. Pave Tomorrow.</p>
+</footer>
+
 </body>
 </html>
