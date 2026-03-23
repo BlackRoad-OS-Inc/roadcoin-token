@@ -1,5 +1,13 @@
 # roadcoin-token
 
+> RoadCoin — creator payment system with direct payments, micro-tipping, and subscription management (BlackRoad integration)
+
+Part of the [BlackRoad OS](https://blackroad.io) ecosystem — [BlackRoad-OS-Inc](https://github.com/BlackRoad-OS-Inc)
+
+---
+
+# roadcoin-token
+
 RoadCoin — creator payment system with direct payments, micro-tipping, and subscription management (BlackRoad integration)
 
 **BlackRoad-OS-Inc** — Corporate root — all IP and governance
